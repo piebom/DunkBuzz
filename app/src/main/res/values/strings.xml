@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DunkBuzz</string>
+    <string name="detail">Detail</string>
+    <string name="about_title">About</string>
+    <string name="camera_title">Camera</string>
+    <string name="Teams">Teams</string>
+    <string name="Matches">Matches</string>
+    <string name="Standings">Standings</string>
+</resources>
