@@ -25,7 +25,7 @@ fun DunkBuzzAppAppBar(
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = Color.Transparent,
+            containerColor = Color.White,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
