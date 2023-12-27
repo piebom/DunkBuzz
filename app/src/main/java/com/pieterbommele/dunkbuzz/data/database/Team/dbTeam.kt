@@ -4,7 +4,7 @@ import androidx.room.PrimaryKey
 import com.pieterbommele.dunkbuzz.model.Team
 
 @Entity(tableName = "teams")
-data class dbTeam(
+data class DbTeam(
     @PrimaryKey
     val id : Int,
     val abbreviation: String,
@@ -15,7 +15,7 @@ data class dbTeam(
     val name: String
 )
 
-fun dbTeam.asDomainTeams(): Team {
+fun DbTeam.asDomainTeams(): Team {
     return Team(
         id = this.id,
         abbreviation = this.abbreviation,
@@ -27,8 +27,8 @@ fun dbTeam.asDomainTeams(): Team {
     )
 }
 
-fun Team.asDbTeam(): dbTeam {
-    return dbTeam(
+fun Team.asDbTeam(): DbTeam {
+    return DbTeam(
         id = this.id,
         abbreviation = this.abbreviation,
         city = this.city,
@@ -39,7 +39,7 @@ fun Team.asDbTeam(): dbTeam {
     )
 }
 
-fun List<dbTeam>.asDomainTeams(): List<Team> {
+fun List<DbTeam>.asDomainTeams(): List<Team> {
     return this.map {
         Team(it.id,it.abbreviation, it.city, it.conference, it.division, it.full_name, it.name)
     }

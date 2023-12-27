@@ -1,12 +1,13 @@
-package com.pieterbommele.dunkbuzz.network
+package com.pieterbommele.dunkbuzz.network.Team
 
 import com.pieterbommele.dunkbuzz.model.Team
+import com.pieterbommele.dunkbuzz.network.ApiMeta
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiResponse(
+data class ApiResponseTeam(
     val data: List<ApiTeam>,
     val meta: ApiMeta
 )

@@ -1,6 +1,7 @@
 package com.pieterbommele.dunkbuzz.ui.overviewScreen
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -64,7 +66,7 @@ fun TeamOverview(
 @Composable
 fun TeamListComponent(modifier: Modifier = Modifier, teamOverviewState: TeamOverviewState, teamListState: TeamListState) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier.padding(top = 16.dp)) {
+    LazyColumn(state = lazyListState, modifier = modifier.background(Color.White).padding(top = 16.dp)) {
         items(teamListState.teamList.size) { index ->
             TeamItem(
                 teamName = teamListState.teamList[index].name,

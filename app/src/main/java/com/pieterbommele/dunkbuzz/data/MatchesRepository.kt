@@ -8,9 +8,16 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.pieterbommele.dunkbuzz.data.database.Team.TeamDao
+import com.pieterbommele.dunkbuzz.data.database.Match.MatchDao
+import com.pieterbommele.dunkbuzz.data.database.Match.asDbMatch
+import com.pieterbommele.dunkbuzz.data.database.Match.asDomainMatch
+import com.pieterbommele.dunkbuzz.data.database.Match.asDomainMatches
 import com.pieterbommele.dunkbuzz.data.database.Team.asDbTeam
 import com.pieterbommele.dunkbuzz.data.database.Team.asDomainTeams
+import com.pieterbommele.dunkbuzz.model.Match
+import com.pieterbommele.dunkbuzz.network.Match.MatchApiService
+import com.pieterbommele.dunkbuzz.network.Match.asDomainObjects
+import com.pieterbommele.dunkbuzz.network.Match.getMatchesAsFlow
 import com.pieterbommele.dunkbuzz.network.Team.TeamApiService
 import com.pieterbommele.dunkbuzz.network.Team.asDomainObjects
 import com.pieterbommele.dunkbuzz.network.Team.getTeamsAsFlow
@@ -21,31 +28,29 @@ import kotlinx.coroutines.flow.onEach
 import java.net.SocketTimeoutException
 import java.util.UUID
 
-interface TeamsRepository {
-    // all items from datasource
-    fun getTeams(): Flow<List<Team>>
+interface MatchesRepository {
+    fun getMatches(): Flow<List<Match>>
 
-    // one specific item
-    fun getTeam(id: String): Flow<Team?>
+    fun getMatch(id: Int): Flow<Match?>
 
-    suspend fun insertTeam(team: Team)
+    suspend fun insertMatch(team: Match)
 
-    suspend fun deleteTeam(team: Team)
+    suspend fun deleteMatch(team: Match)
 
-    suspend fun updateTeam(team: Team)
+    suspend fun updateMatch(team: Match)
 
     suspend fun refresh()
 
     var wifiWorkInfo: Flow<WorkInfo>
 }
 
-class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiService: TeamApiService, context: Context) : TeamsRepository {
+class CachingMatchesRepository(private val matchDao: MatchDao, private val matchApiService: MatchApiService, context: Context) : MatchesRepository {
 
     // this repo contains logic to refresh the tasks (remote)
     // sometimes that logic is written in a 'usecase'
-    override fun getTeams(): Flow<List<Team>> {
-        return teamDao.getAllItems().map {
-            it.asDomainTeams()
+    override fun getMatches(): Flow<List<Match>> {
+        return matchDao.getAllItems().map {
+            it.asDomainMatches()
         }.onEach {
             if(it.isEmpty()){
                 refresh()
@@ -53,22 +58,22 @@ class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiSe
         }
     }
 
-    override fun getTeam(name: String): Flow<Team?> {
-        return teamDao.getItem(name).map {
-            it.asDomainTeams()
+    override fun getMatch(id: Int): Flow<Match?> {
+        return matchDao.getItem(id).map {
+            it.asDomainMatch()
         }
     }
 
-    override suspend fun insertTeam(task: Team) {
-        teamDao.insert(task.asDbTeam())
+    override suspend fun insertMatch(task: Match) {
+        matchDao.insert(task.asDbMatch())
     }
 
-    override suspend fun deleteTeam(task: Team) {
-        teamDao.delete(task.asDbTeam())
+    override suspend fun deleteMatch(task: Match) {
+        matchDao.delete(task.asDbMatch())
     }
 
-    override suspend fun updateTeam(task: Team) {
-        teamDao.update(task.asDbTeam())
+    override suspend fun updateMatch(task: Match) {
+        matchDao.update(task.asDbMatch())
     }
 
     private var workID = UUID(1,2)
@@ -93,11 +98,11 @@ class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiSe
 
         //note the actual api request still uses coroutines
         try {
-            teamApiService.getTeamsAsFlow().asDomainObjects().collect {
+            matchApiService.getMatchesAsFlow().asDomainObjects().collect {
                     value ->
                 for (task in value) {
                     Log.i("TEST", "refresh: $value")
-                    insertTeam(task)
+                    insertMatch(task)
                 }
             }
         } catch (e: SocketTimeoutException) {

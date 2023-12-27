@@ -43,7 +43,7 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
     init {
 
         // initializes the uiListState
-        getRepoTasks()
+        getRepoTeams()
         Log.i("vm inspection", "TaskOverviewViewModel init")
 
 
@@ -79,44 +79,8 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
         }
     }
 
-    fun setNewAbbrivation(newAbbrivation: String) {
-        _uiState.update {
-            it.copy(newAbbreviation = newAbbrivation)
-        }
-    }
-
-    fun setNewCity(newCity: String) {
-        _uiState.update {
-            it.copy(newCity = newCity)
-        }
-    }
-
-    fun setNewConference(newConference: String) {
-        _uiState.update {
-            it.copy(newConference = newConference)
-        }
-    }
-
-    fun setNewDivision(newDivision: String) {
-        _uiState.update {
-            it.copy(newDivision = newDivision)
-        }
-    }
-
-    fun setNewFull_name(newFull_name: String) {
-        _uiState.update {
-            it.copy(newFull_name = newFull_name)
-        }
-    }
-
-    fun setNewName(newName: String) {
-        _uiState.update {
-            it.copy(newName = newName)
-        }
-    }
-
     // this
-    private fun getRepoTasks() {
+    private fun getRepoTeams() {
         try {
             viewModelScope.launch { teamsRepository.refresh() }
 

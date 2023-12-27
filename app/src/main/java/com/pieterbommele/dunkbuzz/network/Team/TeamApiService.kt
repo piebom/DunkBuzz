@@ -1,4 +1,4 @@
-package com.pieterbommele.dunkbuzz.network
+package com.pieterbommele.dunkbuzz.network.Team
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +14,7 @@ import retrofit2.http.GET
 interface TeamApiService {
     // suspend is added to force the user to call this in a coroutine scope
     @GET("teams")
-    suspend fun getTeams(): ApiResponse
+    suspend fun getTeams(): ApiResponseTeam
 }
 
 // helper function
