@@ -11,5 +11,4 @@ import com.pieterbommele.dunkbuzz.R
 enum class DunkBuzzOverviewScreen(@StringRes val title: Int, val icon: Int) {
     Teams(title = R.string.Teams, icon = R.drawable.user),
     Matches(title = R.string.Matches, R.drawable.user),
-    Standings(title = R.string.Standings, icon = R.drawable.user)
 }

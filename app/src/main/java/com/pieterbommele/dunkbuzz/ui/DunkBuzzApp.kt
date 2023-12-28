@@ -54,7 +54,6 @@ fun DunkBuzzApp(
 
     val goToMatches = {navController.navigate(DunkBuzzOverviewScreen.Matches.name) {launchSingleTop = true}}
     val goToTeams = {navController.navigate(DunkBuzzOverviewScreen.Teams.name) {launchSingleTop = true}}
-    val goToStandings = {navController.navigate(DunkBuzzOverviewScreen.Standings.name) {launchSingleTop = true}}
 
     val currentScreenTitle = DunkBuzzOverviewScreen.valueOf(
         backStackEntry?.destination?.route ?: DunkBuzzOverviewScreen.Matches.name
@@ -73,7 +72,7 @@ fun DunkBuzzApp(
                 )
             },
             bottomBar = {
-                DunkBuzzBottomAppBar(goToTeams,goToMatches, goToStandings)
+                DunkBuzzBottomAppBar(goToTeams,goToMatches)
             },
         ) { innerPadding ->
             navComponent(navController, modifier = Modifier.padding(innerPadding))

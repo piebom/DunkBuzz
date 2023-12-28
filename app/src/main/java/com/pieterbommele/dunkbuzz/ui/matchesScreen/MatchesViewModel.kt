@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -26,8 +28,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewModel() {
+    private val _selectedDate = MutableLiveData<LocalDate>()
+    val selectedDate: LiveData<LocalDate> = _selectedDate
+    // use StateFlow (Flow: emits current state + any updates)
+    /*
+    * Note: uiState is a cold flow. Changes don't come in from above unless a
+    * refresh is called...
+    * */
     private val _uiState = MutableStateFlow(MatchOverviewState(/*TaskSampler.getAll()*/))
     val uiState: StateFlow<MatchOverviewState> = _uiState.asStateFlow()
 
@@ -44,30 +57,41 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
     // state of the workers, prepared here for the UI
     //note, a better approach would use a new data class to represent the state...
     lateinit var wifiWorkerState: StateFlow<WorkerState>
-
     init {
+        onDateSelected(LocalDate.now())
+    }
+    fun onDateSelected(date: LocalDate) {
+        _selectedDate.value = date
 
-        // initializes the uiListState
-        getRepoMatches()
-        Log.i("vm inspection", "TaskOverviewViewModel init")
+        // Directly create a ZonedDateTime at the start of the day (00:00) for the given date in UTC
+        val startOfDayUTC = date.atStartOfDay(ZoneOffset.UTC)
 
+        // Define a custom formatter that includes milliseconds
+        val customFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
+        // Format the ZonedDateTime as a String in the custom format with milliseconds
+        val formattedDate = customFormatter.format(startOfDayUTC)
 
+        // Now formattedDate is like "2023-01-01T00:00:00.000Z"
+        getRepoMatches(formattedDate)
     }
 
 
-    // this
-    private fun getRepoMatches() {
-        try {
-            viewModelScope.launch { matchesRepository.refresh() }
 
-            uiListState = matchesRepository.getMatches().map { MatchListState(it) }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = MatchListState(),
-                )
-            matchApiState = MatchApiState.Success
+        // this
+    private fun getRepoMatches(date: String) {
+        try {
+
+            viewModelScope.launch {
+              matchesRepository.refresh(date = date)
+            }
+                uiListState = matchesRepository.getMatches(date = date).map { MatchListState(it) }
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(5_000L),
+                        initialValue = MatchListState(),
+                    )
+                matchApiState = MatchApiState.Success
 
             wifiWorkerState = matchesRepository.wifiWorkInfo.map { WorkerState(it) }.stateIn(
                 scope = viewModelScope,

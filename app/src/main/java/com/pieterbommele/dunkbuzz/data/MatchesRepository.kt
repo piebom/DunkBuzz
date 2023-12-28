@@ -29,7 +29,7 @@ import java.net.SocketTimeoutException
 import java.util.UUID
 
 interface MatchesRepository {
-    fun getMatches(): Flow<List<Match>>
+    fun getMatches(date:String): Flow<List<Match>>
 
     fun getMatch(id: Int): Flow<Match?>
 
@@ -39,7 +39,7 @@ interface MatchesRepository {
 
     suspend fun updateMatch(team: Match)
 
-    suspend fun refresh()
+    suspend fun refresh(date: String)
 
     var wifiWorkInfo: Flow<WorkInfo>
 }
@@ -48,12 +48,12 @@ class CachingMatchesRepository(private val matchDao: MatchDao, private val match
 
     // this repo contains logic to refresh the tasks (remote)
     // sometimes that logic is written in a 'usecase'
-    override fun getMatches(): Flow<List<Match>> {
-        return matchDao.getAllItems().map {
+    override fun getMatches(date:String): Flow<List<Match>> {
+        return matchDao.getAllItems(date).map {
             it.asDomainMatches()
         }.onEach {
             if(it.isEmpty()){
-                refresh()
+                refresh(date)
             }
         }
     }
@@ -83,7 +83,7 @@ class CachingMatchesRepository(private val matchDao: MatchDao, private val match
     override var wifiWorkInfo: Flow<WorkInfo> =
         workManager.getWorkInfoByIdFlow(workID)
 
-    override suspend fun refresh() {
+    override suspend fun refresh(date: String) {
         //refresh is used to schedule the workrequest
 
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -98,7 +98,7 @@ class CachingMatchesRepository(private val matchDao: MatchDao, private val match
 
         //note the actual api request still uses coroutines
         try {
-            matchApiService.getMatchesAsFlow().asDomainObjects().collect {
+            matchApiService.getMatchesAsFlow(date = date).asDomainObjects().collect {
                     value ->
                 for (task in value) {
                     Log.i("TEST", "refresh: $value")

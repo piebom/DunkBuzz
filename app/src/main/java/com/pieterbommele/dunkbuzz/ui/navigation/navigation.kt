@@ -135,10 +135,5 @@ fun navComponent(
         ) {
             MatchesScreen()
         }
-        composable(
-            route = DunkBuzzOverviewScreen.Standings.name,
-        ) {
-            // Your Standings screen content
-        }
     }
 }

@@ -11,7 +11,7 @@ import com.pieterbommele.dunkbuzz.data.database.Team.TeamDao
 /**
  * Database class with a singleton Instance object.
  */
-@Database(entities = [DbTeam::class,DbMatch::class], version = 5, exportSchema = false)
+@Database(entities = [DbTeam::class,DbMatch::class], version = 7, exportSchema = false)
 abstract class DunkBuzzDb : RoomDatabase() {
 
     abstract fun teamDao(): TeamDao

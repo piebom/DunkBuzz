@@ -49,7 +49,7 @@ data class BottomNavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit, goStandings: () -> Unit) {
+fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit) {
         DunkBuzzTheme {
             val items = listOf(
                 BottomNavigationItem(
@@ -63,13 +63,6 @@ fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit, goStandings
                     selectedIcon = ImageVector.vectorResource(R.drawable.matches),
                     unselectedIcon = ImageVector.vectorResource(R.drawable.matches),
                     hasNews = false,
-                    badgeCount = 45
-                ),
-                BottomNavigationItem(
-                    title = "Standings",
-                    selectedIcon = ImageVector.vectorResource(R.drawable.standings),
-                    unselectedIcon = ImageVector.vectorResource(R.drawable.standings),
-                    hasNews = true,
                 ),
             )
             var selectedItemIndex by rememberSaveable {
@@ -88,7 +81,6 @@ fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit, goStandings
                                             when (index) {
                                                 0 -> goTeams()
                                                 1 -> goMatches()
-                                                2 -> goStandings()
                                             }
                                         }
                                     },
