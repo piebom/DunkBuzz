@@ -4,11 +4,9 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -27,10 +24,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pieterbommele.dunkbuzz.R
 
+/**
+ * Composable function to display a match item card.
+ *
+ * @param modifier Modifier for the match item card.
+ * @param home_team_id The ID of the home team.
+ * @param home_team_name The name of the home team.
+ * @param home_team_score The score of the home team.
+ * @param visitor_team_id The ID of the visitor team.
+ * @param visitor_team_name The name of the visitor team.
+ * @param visitor_team_score The score of the visitor team.
+ * @param quarter The quarter of the match.
+ */
 @Composable
 fun MatchItem(
     modifier: Modifier = Modifier,
@@ -115,7 +123,7 @@ fun MatchItem(
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
             }
-            Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(id = imageResIdVisitor),
                     contentDescription = "$visitor_team_name logo",

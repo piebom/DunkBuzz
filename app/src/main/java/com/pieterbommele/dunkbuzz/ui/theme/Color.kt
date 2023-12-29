@@ -18,7 +18,6 @@ val Black = Color(0xFF08102A)
 
 val LightGray = Color(0xFFE7E7E7)
 
-//white
-val Primary =  Color(0xFFFFFFFF)
+// white
+val Primary = Color(0xFFFFFFFF)
 val PrimaryVariant = Color(0xFFE0E0E0)
-

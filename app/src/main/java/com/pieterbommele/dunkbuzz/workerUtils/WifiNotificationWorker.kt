@@ -15,23 +15,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-
 private const val TAG = "WithWifiWorker"
-class WifiNotificationWorker(context : Context, params: WorkerParameters): CoroutineWorker(context, params) {
+class WifiNotificationWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         makeStatusNotification("starting the worker", applicationContext)
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             return@withContext try {
                 delay(10000L)
                 makeStatusNotification("work finished successfully", applicationContext)
                 Result.success()
-            } catch (throwable: Throwable){
+            } catch (throwable: Throwable) {
                 Result.failure()
             }
         }
     }
 }
-
 
 fun makeStatusNotification(message: String, context: Context) {
 

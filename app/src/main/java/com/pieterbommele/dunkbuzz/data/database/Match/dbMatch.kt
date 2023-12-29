@@ -1,6 +1,5 @@
 package com.pieterbommele.dunkbuzz.data.database.Match
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -27,6 +26,14 @@ data class DbMatch(
     val visitorTeamScore: Int
 )
 
+/**
+ * Converts a [DbMatch] instance to a domain model [Match].
+ *
+ * This function maps the database match entity to a more general Match model used throughout the app.
+ * It includes converting the embedded database team entities to domain team models.
+ *
+ * @return A [Match] instance containing the domain model representation of this database match.
+ */
 fun DbMatch.asDomainMatch(): Match {
     return Match(
         id = this.id,
@@ -42,6 +49,15 @@ fun DbMatch.asDomainMatch(): Match {
         visitorTeamScore = this.visitorTeamScore
     )
 }
+
+/**
+ * Converts a domain model [Match] instance to a database entity [DbMatch].
+ *
+ * This function maps the domain match model to a database entity model. It includes converting the
+ * domain team models to embedded database team entities.
+ *
+ * @return A [DbMatch] instance containing the database entity representation of the domain match.
+ */
 fun Match.asDbMatch(): DbMatch {
     return DbMatch(
         id = this.id,
@@ -58,6 +74,14 @@ fun Match.asDbMatch(): DbMatch {
     )
 }
 
+/**
+ * Converts a list of [DbMatch] instances to a list of domain model [Match] instances.
+ *
+ * This function maps each database match entity in the list to its corresponding domain match model.
+ * It is essentially a batch operation of [asDomainMatch] on a list.
+ *
+ * @return A list of [Match] instances representing the domain model matches.
+ */
 fun List<DbMatch>.asDomainMatches(): List<Match> {
     return this.map {
         it.asDomainMatch()

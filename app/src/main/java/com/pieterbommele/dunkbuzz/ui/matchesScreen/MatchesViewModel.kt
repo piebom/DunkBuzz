@@ -1,6 +1,5 @@
 package com.pieterbommele.dunkbuzz.ui.matchesScreen
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,11 +12,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pieterbommele.dunkbuzz.DunkBuzzApplication
 import com.pieterbommele.dunkbuzz.data.MatchesRepository
-import com.pieterbommele.dunkbuzz.data.TeamsRepository
-import com.pieterbommele.dunkbuzz.model.Team
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamApiState
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamListState
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamOverviewState
 import com.pieterbommele.dunkbuzz.ui.overviewScreen.WorkerState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,14 +19,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
+/**
+ * ViewModel for the Matches screen.
+ *
+ * @param matchesRepository The repository used to fetch match data.
+ */
 class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewModel() {
     private val _selectedDate = MutableLiveData<LocalDate>()
     val selectedDate: LiveData<LocalDate> = _selectedDate
@@ -55,11 +52,17 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
         private set
 
     // state of the workers, prepared here for the UI
-    //note, a better approach would use a new data class to represent the state...
+    // note, a better approach would use a new data class to represent the state...
     lateinit var wifiWorkerState: StateFlow<WorkerState>
     init {
         onDateSelected(LocalDate.now())
     }
+
+    /**
+     * Called when a date is selected in the UI.
+     *
+     * @param date The selected date.
+     */
     fun onDateSelected(date: LocalDate) {
         _selectedDate.value = date
 
@@ -76,22 +79,20 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
         getRepoMatches(formattedDate)
     }
 
-
-
-        // this
+    // this
     private fun getRepoMatches(date: String) {
         try {
 
             viewModelScope.launch {
-              matchesRepository.refresh(date = date)
+                matchesRepository.refresh(date = date)
             }
-                uiListState = matchesRepository.getMatches(date = date).map { MatchListState(it) }
-                    .stateIn(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed(5_000L),
-                        initialValue = MatchListState(),
-                    )
-                matchApiState = MatchApiState.Success
+            uiListState = matchesRepository.getMatches(date = date).map { MatchListState(it) }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = MatchListState(),
+                )
+            matchApiState = MatchApiState.Success
 
             wifiWorkerState = matchesRepository.wifiWorkInfo.map { WorkerState(it) }.stateIn(
                 scope = viewModelScope,
@@ -105,8 +106,9 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
         }
     }
 
-
-    // object to tell the android framework how to handle the parameter of the viewmodel
+    /**
+     * Companion object to provide a [ViewModelProvider.Factory] for creating instances of [MatchesViewModel].
+     */
     companion object {
         private var Instance: MatchesViewModel? = null
         val Factory: ViewModelProvider.Factory = viewModelFactory {
@@ -120,5 +122,4 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
             }
         }
     }
-
 }

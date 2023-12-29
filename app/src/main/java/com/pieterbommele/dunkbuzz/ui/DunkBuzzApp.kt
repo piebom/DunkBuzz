@@ -1,40 +1,19 @@
 package com.pieterbommele.dunkbuzz.ui
 
 import android.os.Build
-import androidx.activity.OnBackPressedDispatcher
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PermanentDrawerSheet
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -44,27 +23,31 @@ import com.pieterbommele.dunkbuzz.ui.components.DunkBuzzBottomAppBar
 import com.pieterbommele.dunkbuzz.ui.components.DunkBuzzNavigationRail
 import com.pieterbommele.dunkbuzz.ui.navigation.DunkBuzzOverviewScreen
 import com.pieterbommele.dunkbuzz.ui.navigation.navComponent
-import com.pieterbommele.dunkbuzz.ui.theme.DunkBuzzTheme
-import com.pieterbommele.dunkbuzz.ui.util.TaskNavigationType
+import com.pieterbommele.dunkbuzz.ui.util.DunkBuzzNavigationType
 
+/**
+ * Composable function representing the main DunkBuzz application.
+ *
+ * @param navigationType The type of navigation pattern to use (e.g., BOTTOM_NAVIGATION, NAVIGATION_RAIL).
+ * @param navController The NavHostController responsible for navigation within the app.
+ */
 @RequiresApi(Build.VERSION_CODES.R)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DunkBuzzApp(
-    navigationType: TaskNavigationType,
+    navigationType: DunkBuzzNavigationType,
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
-    val goToMatches = {navController.navigate(DunkBuzzOverviewScreen.Matches.name) {launchSingleTop = true}}
-    val goToTeams = {navController.navigate(DunkBuzzOverviewScreen.Teams.name) {launchSingleTop = true}}
+    val goToMatches = { navController.navigate(DunkBuzzOverviewScreen.Matches.name) { launchSingleTop = true } }
+    val goToTeams = { navController.navigate(DunkBuzzOverviewScreen.Teams.name) { launchSingleTop = true } }
 
     val currentScreenTitle = DunkBuzzOverviewScreen.valueOf(
         backStackEntry?.destination?.route ?: DunkBuzzOverviewScreen.Matches.name
     ).title
 
     var isAddNewVisible by remember { mutableStateOf(false) }
-    if (navigationType == TaskNavigationType.BOTTOM_NAVIGATION){
+    if (navigationType == DunkBuzzNavigationType.BOTTOM_NAVIGATION) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.onPrimary,
             topBar = {
@@ -73,15 +56,14 @@ fun DunkBuzzApp(
                 )
             },
             bottomBar = {
-                DunkBuzzBottomAppBar(goToTeams,goToMatches)
+                DunkBuzzBottomAppBar(goToTeams, goToMatches)
             },
         ) { innerPadding ->
             navComponent(navController, modifier = Modifier.padding(innerPadding))
         }
-
-    }else{
+    } else {
         Row {
-            AnimatedVisibility(visible = navigationType == TaskNavigationType.NAVIGATION_RAIL) {
+            AnimatedVisibility(visible = navigationType == DunkBuzzNavigationType.NAVIGATION_RAIL) {
                 val navigationRailContentDescription = stringResource(R.string.navigation_rail)
                 DunkBuzzNavigationRail(
                     selectedDestination = navController.currentDestination,
@@ -99,19 +81,6 @@ fun DunkBuzzApp(
 
                 navComponent(navController, modifier = Modifier.padding(innerPadding))
             }
-        }
-
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.R)
-@Preview(showBackground = true, widthDp = 500)
-@Composable
-fun DunkBuzzPreview() {
-    DunkBuzzTheme {
-        // create a box to overlap image and texts
-        Surface(modifier = Modifier.fillMaxWidth()) {
-            DunkBuzzApp(TaskNavigationType.BOTTOM_NAVIGATION)
         }
     }
 }

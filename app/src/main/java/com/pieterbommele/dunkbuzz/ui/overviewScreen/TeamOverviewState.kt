@@ -3,7 +3,20 @@ package com.pieterbommele.dunkbuzz.ui.overviewScreen
 import androidx.work.WorkInfo
 import com.pieterbommele.dunkbuzz.model.Team
 
-data class TeamOverviewState (
+/**
+ * Represents the state of the Team Overview screen.
+ *
+ * @param isAddingVisible Whether the "add" action is visible.
+ * @param newAbbreviation The new team's abbreviation.
+ * @param newCity The new team's city.
+ * @param newConference The new team's conference.
+ * @param newDivision The new team's division.
+ * @param newFull_name The new team's full name.
+ * @param newName The new team's name.
+ * @param scrollActionIdx The index for scroll action.
+ * @param scrollToItemIndex The index to scroll to.
+ */
+data class TeamOverviewState(
     // val currentTaskList: List<Task>,
     val isAddingVisible: Boolean = false,
     val newAbbreviation: String = "",
@@ -14,24 +27,38 @@ data class TeamOverviewState (
     val newName: String = "",
     val scrollActionIdx: Int = 0,
     val scrollToItemIndex: Int = 0,
-    )
+)
 
-    data class TeamListState(val teamList: List<Team> = listOf())
+/**
+ * Represents the state of the team list.
+ *
+ * @param teamList The list of teams.
+ */
+data class TeamListState(val teamList: List<Team> = listOf())
 
-    data class WorkerState(val workerInfo: WorkInfo? = null)
+/**
+ * Represents the state of a worker.
+ *
+ * @param workerInfo The worker information.
+ */
+data class WorkerState(val workerInfo: WorkInfo? = null)
 
-// the sealed interface has only three possible values
-    /*Sidenote: to learn more about this TaskApiState object, you can search on LCE (Loading, Content, Error) pattern
+/**
+ * Sealed interface for the state of Team API.
+ */
+sealed interface TeamApiState {
+    /**
+     * Represents the success state of the Team API.
+     */
+    object Success : TeamApiState
 
-    When the state is changed to Error, the taskList will not be updated (offline first).
-    To ensure the list is considered immutable (fully immutable, won't ever change unless a new object is created), add the Immutable annotation.
+    /**
+     * Represents the error state of the Team API.
+     */
+    object Error : TeamApiState
 
-    The LCE pattern is not completed in the application, because it requires more complex helper classes
-    An example can be found here https://www.valueof.io/blog/compose-ui-state-flow-offline-first-repository
-    */
-
-    sealed interface TeamApiState {
-        object Success : TeamApiState
-        object Error : TeamApiState
-        object Loading : TeamApiState
-    }
+    /**
+     * Represents the loading state of the Team API.
+     */
+    object Loading : TeamApiState
+}

@@ -1,14 +1,21 @@
 package com.pieterbommele.dunkbuzz.ui.navigation
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import com.pieterbommele.dunkbuzz.R
 
+/**
+ * Enum representing screens in the DunkBuzz overview navigation.
+ *
+ * @param title The title resource ID for the screen.
+ * @param icon The icon resource ID for the screen.
+ */
 enum class DunkBuzzOverviewScreen(@StringRes val title: Int, val icon: Int) {
+    /**
+     * Represents the "Teams" screen.
+     */
     Teams(title = R.string.Teams, icon = R.drawable.team),
-    Matches(title = R.string.Matches, icon = R.drawable.matches),
+
+    /**
+     * Represents the "Matches" screen.
+     */
+    Matches(title = R.string.Matches, icon = R.drawable.matches)
 }

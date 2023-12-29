@@ -1,7 +1,5 @@
 package com.pieterbommele.dunkbuzz.ui.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,11 +23,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.pieterbommele.dunkbuzz.R
-import com.pieterbommele.dunkbuzz.ui.theme.DunkBuzzTheme
 
+/**
+ * A composable function that displays a team item card. It shows the team's logo alongside its name and abbreviation.
+ * The logo image is dynamically retrieved based on the team ID provided.
+ *
+ * The card is styled according to the MaterialTheme and adapts its size based on the content.
+ *
+ * @param modifier Modifier to be applied to the card layout. It allows further customization like padding, alignment, etc.
+ * @param id The unique identifier for the team, used to fetch the team's logo from drawable resources.
+ * @param teamName The full name of the team to be displayed.
+ * @param teamAbbreviation The abbreviated name of the team, typically 2-3 letters representing the team.
+ *
+ * Usage:
+ * ```
+ * TeamItem(
+ *     id = 1,
+ *     teamName = "Los Angeles Lakers",
+ *     teamAbbreviation = "LAL"
+ * )
+ * ```
+ */
 @Composable
 fun TeamItem(
     modifier: Modifier = Modifier,
@@ -38,7 +53,7 @@ fun TeamItem(
     teamAbbreviation: String = ""
 ) {
     val context = LocalContext.current
-    val imageName = "nba_$id"  // Replace with your dynamic ID
+    val imageName = "nba_$id" // Replace with your dynamic ID
     val imageResId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
 
     Card(

@@ -2,5 +2,4 @@ package com.pieterbommele.dunkbuzz
 
 import androidx.lifecycle.ViewModel
 
-class SampleViewModel: ViewModel() {
-}
+class SampleViewModel : ViewModel()

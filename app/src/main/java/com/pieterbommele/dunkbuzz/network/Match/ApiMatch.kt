@@ -8,12 +8,33 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
 
+/**
+ * Represents the response structure for match-related API calls.
+ *
+ * @property data The list of match data retrieved from the API.
+ * @property meta Meta-information about the response, like pagination details.
+ */
 @Serializable
 data class ApiResponseMatch(
     val data: List<ApiMatch>,
     val meta: ApiMeta
 )
 
+/**
+ * Represents match data retrieved from the API.
+ *
+ * @property id The unique identifier for the match.
+ * @property date The date of the match. Nullable.
+ * @property home_team The home team data.
+ * @property home_team_score The score for the home team.
+ * @property period The period in which the match is.
+ * @property postseason Boolean indicating if the match is in the postseason.
+ * @property season The season year the match is part of.
+ * @property status The current status of the match.
+ * @property time The time at which the match takes place. Nullable.
+ * @property visitor_team The visitor team data.
+ * @property visitor_team_score The score for the visitor team.
+ */
 @Serializable
 data class ApiMatch(
     val id: Int,
@@ -29,13 +50,28 @@ data class ApiMatch(
     val visitor_team_score: Int
 )
 
-// extension function for an ApiTask List to convert is to a Domain Task List
+/**
+ * Transforms a flow of a list of [ApiMatch] to a flow of a list of [Match].
+ *
+ * This function maps the data from the API-specific match format to the domain-specific match format,
+ * making it suitable for use throughout the application.
+ *
+ * @return A flow emitting a list of domain model [Match] instances.
+ */
 fun Flow<List<ApiMatch>>.asDomainObjects(): Flow<List<Match>> {
     return map {
         it.asDomainObjects()
     }
 }
 
+/**
+ * Converts a list of [ApiMatch] instances to a list of domain model [Match] instances.
+ *
+ * This function maps each API-specific match to the domain-specific match format,
+ * making it suitable for use throughout the application.
+ *
+ * @return A list of domain model [Match] instances.
+ */
 fun List<ApiMatch>.asDomainObjects(): List<Match> {
     var domainList = this.map {
         Match(

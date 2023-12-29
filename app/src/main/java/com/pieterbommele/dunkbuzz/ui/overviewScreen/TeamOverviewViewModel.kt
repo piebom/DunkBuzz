@@ -12,24 +12,24 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pieterbommele.dunkbuzz.DunkBuzzApplication
 import com.pieterbommele.dunkbuzz.data.TeamsRepository
-import com.pieterbommele.dunkbuzz.model.Team
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+
+/**
+ * ViewModel responsible for managing the state of the Team Overview screen.
+ *
+ * @property teamsRepository The repository responsible for fetching and storing team data.
+ */
 class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(TeamOverviewState(/*TaskSampler.getAll()*/))
     val uiState: StateFlow<TeamOverviewState> = _uiState.asStateFlow()
 
-    /*
-    * Note: uiListState is a hot flow (.stateIn makes it so) --> it updates given a scope (viewmodelscope)
-    * when no updates are required (lifecycle) the subscription is stopped after a timeout
-    * */
     lateinit var uiListState: StateFlow<TeamListState>
 
     // keeping the state of the api request
@@ -37,7 +37,7 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
         private set
 
     // state of the workers, prepared here for the UI
-    //note, a better approach would use a new data class to represent the state...
+    // note, a better approach would use a new data class to represent the state...
     lateinit var wifiWorkerState: StateFlow<WorkerState>
 
     init {
@@ -45,38 +45,6 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
         // initializes the uiListState
         getRepoTeams()
         Log.i("vm inspection", "TaskOverviewViewModel init")
-
-
-
-    }
-
-    fun addTask() {
-        // saving the new task (to db? to network? --> doesn't matter)
-        viewModelScope.launch { saveTask(Team(0,_uiState.value.newAbbreviation, _uiState.value.newCity,_uiState.value.newConference,_uiState.value.newDivision,_uiState.value.newFull_name,_uiState.value.newName)) }
-
-        // reset the input fields
-        _uiState.update {
-                currentState ->
-            currentState.copy(
-                /*currentTaskList = currentState.currentTaskList +
-                    Task(currentState.newTaskName, currentState.newTaskDescription),*/
-                // clean up previous values
-                newAbbreviation = "",
-                newCity = "",
-                newConference = "",
-                newDivision = "",
-                newFull_name = "",
-                newName = "",
-                // whenever this changes, scrollToItemIndex should be scrolled into view
-                scrollActionIdx = currentState.scrollActionIdx.plus(1),
-                scrollToItemIndex = uiListState.value.teamList.size,
-            )
-        }
-    }
-    private fun validateInput(): Boolean {
-        return with(_uiState) {
-            value.newAbbreviation.length > 0 && value.newCity.length > 0 && value.newConference.length > 0 && value.newDivision.length > 0 && value.newFull_name.length > 0 && value.newName.length > 0
-        }
     }
 
     // this
@@ -92,7 +60,7 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
                 )
             teamApiState = TeamApiState.Success
 
-            wifiWorkerState = teamsRepository.wifiWorkInfo.map { WorkerState(it)}.stateIn(
+            wifiWorkerState = teamsRepository.wifiWorkInfo.map { WorkerState(it) }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000L),
                 initialValue = WorkerState(),
@@ -101,18 +69,6 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
             // show a toast? save a log on firebase? ...
             // set the error state
             teamApiState = TeamApiState.Error
-        }
-    }
-
-    private suspend fun saveTask(team: Team) {
-        if (validateInput()) {
-            teamsRepository.insertTeam(team)
-        }
-    }
-
-    fun onVisibilityChanged() {
-        _uiState.update {
-            it.copy(isAddingVisible = !_uiState.value.isAddingVisible)
         }
     }
 
@@ -130,5 +86,4 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
             }
         }
     }
-
 }

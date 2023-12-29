@@ -1,6 +1,5 @@
 package com.pieterbommele.dunkbuzz.data
 
-import com.pieterbommele.dunkbuzz.model.Team
 import android.content.Context
 import android.util.Log
 import androidx.work.Constraints
@@ -11,6 +10,7 @@ import androidx.work.WorkManager
 import com.pieterbommele.dunkbuzz.data.database.Team.TeamDao
 import com.pieterbommele.dunkbuzz.data.database.Team.asDbTeam
 import com.pieterbommele.dunkbuzz.data.database.Team.asDomainTeams
+import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.network.Team.TeamApiService
 import com.pieterbommele.dunkbuzz.network.Team.asDomainObjects
 import com.pieterbommele.dunkbuzz.network.Team.getTeamsAsFlow
@@ -21,33 +21,71 @@ import kotlinx.coroutines.flow.onEach
 import java.net.SocketTimeoutException
 import java.util.UUID
 
+/**
+ * Interface defining the operations for managing teams data.
+ */
 interface TeamsRepository {
-    // all items from datasource
+    /**
+     * Retrieves a list of all teams.
+     *
+     * @return A Flow emitting a list of [Team] instances.
+     */
     fun getTeams(): Flow<List<Team>>
 
-    // one specific item
+    /**
+     * Retrieves a single team by its ID.
+     *
+     * @param id The ID of the team to be retrieved.
+     * @return A Flow emitting the [Team] instance with the specified ID.
+     */
     fun getTeam(id: String): Flow<Team?>
 
+    /**
+     * Inserts a team into the repository.
+     *
+     * @param team The [Team] instance to be inserted.
+     */
     suspend fun insertTeam(team: Team)
 
+    /**
+     * Deletes a team from the repository.
+     *
+     * @param team The [Team] instance to be deleted.
+     */
     suspend fun deleteTeam(team: Team)
 
+    /**
+     * Updates an existing team in the repository.
+     *
+     * @param team The [Team] instance with updated information.
+     */
     suspend fun updateTeam(team: Team)
 
+    /**
+     * Refreshes the teams data.
+     */
     suspend fun refresh()
 
+    /**
+     * Provides access to work information related to Wi-Fi connectivity checks.
+     */
     var wifiWorkInfo: Flow<WorkInfo>
 }
 
+/**
+ * A repository implementation that caches teams data and provides functionality to refresh the data from a network source.
+ *
+ * @property teamDao The data access object for team data.
+ * @property teamApiService The API service for retrieving team data from the network.
+ * @property context The context used to access system services and resources.
+ */
 class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiService: TeamApiService, context: Context) : TeamsRepository {
 
-    // this repo contains logic to refresh the tasks (remote)
-    // sometimes that logic is written in a 'usecase'
     override fun getTeams(): Flow<List<Team>> {
         return teamDao.getAllItems().map {
             it.asDomainTeams()
         }.onEach {
-            if(it.isEmpty()){
+            if (it.isEmpty()) {
                 refresh()
             }
         }
@@ -71,15 +109,15 @@ class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiSe
         teamDao.update(task.asDbTeam())
     }
 
-    private var workID = UUID(1,2)
-    //the manager is private to the repository
+    private var workID = UUID(1, 2)
+    // the manager is private to the repository
     private val workManager = WorkManager.getInstance(context)
-    //the info function is public
+    // the info function is public
     override var wifiWorkInfo: Flow<WorkInfo> =
         workManager.getWorkInfoByIdFlow(workID)
 
     override suspend fun refresh() {
-        //refresh is used to schedule the workrequest
+        // refresh is used to schedule the workrequest
 
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
@@ -89,12 +127,10 @@ class CachingTeamsRepository(private val teamDao: TeamDao, private val teamApiSe
         workID = request.id
         wifiWorkInfo = workManager.getWorkInfoByIdFlow(request.id)
 
-
-
-        //note the actual api request still uses coroutines
+        // note the actual api request still uses coroutines
         try {
             teamApiService.getTeamsAsFlow().asDomainObjects().collect {
-                    value ->
+                value ->
                 for (task in value) {
                     Log.i("TEST", "refresh: $value")
                     insertTeam(task)

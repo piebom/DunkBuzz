@@ -2,30 +2,48 @@ package com.pieterbommele.dunkbuzz.ui.matchesScreen
 
 import androidx.work.WorkInfo
 import com.pieterbommele.dunkbuzz.model.Match
-import com.pieterbommele.dunkbuzz.model.Team
 
-data class MatchOverviewState (
+/**
+ * Represents the state for the Match Overview screen.
+ *
+ * @param isAddingVisible Indicates whether the add match view is visible.
+ * @param scrollActionIdx Index for scroll action.
+ * @param scrollToItemIndex Index to scroll to in the match list.
+ */
+data class MatchOverviewState(
     val isAddingVisible: Boolean = false,
     val scrollActionIdx: Int = 0,
     val scrollToItemIndex: Int = 0,
-    )
+)
 
-    data class MatchListState(val matchList: List<Match> = listOf())
+/**
+ * Represents the state for the list of matches.
+ *
+ * @param matchList The list of matches.
+ */
+data class MatchListState(val matchList: List<Match> = listOf())
 
-    data class WorkerState(val workerInfo: WorkInfo? = null)
+/**
+ * Represents the state for a worker (background task) related to matches.
+ *
+ * @param workerInfo The information about the worker's status.
+ */
+data class WorkerState(val workerInfo: WorkInfo? = null)
 
-// the sealed interface has only three possible values
-    /*Sidenote: to learn more about this TaskApiState object, you can search on LCE (Loading, Content, Error) pattern
-
-    When the state is changed to Error, the taskList will not be updated (offline first).
-    To ensure the list is considered immutable (fully immutable, won't ever change unless a new object is created), add the Immutable annotation.
-
-    The LCE pattern is not completed in the application, because it requires more complex helper classes
-    An example can be found here https://www.valueof.io/blog/compose-ui-state-flow-offline-first-repository
-    */
-
-    sealed interface MatchApiState {
-        object Success : MatchApiState
-        object Error : MatchApiState
-        object Loading : MatchApiState
-    }
+/**
+ * Sealed interface representing the state of match-related API calls.
+ */
+sealed interface MatchApiState {
+    /**
+     * Represents a successful API call.
+     */
+    object Success : MatchApiState
+    /**
+     * Represents an error in the API call.
+     */
+    object Error : MatchApiState
+    /**
+     * Represents the loading state of the API call.
+     */
+    object Loading : MatchApiState
+}

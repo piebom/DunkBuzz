@@ -31,29 +31,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pieterbommele.dunkbuzz.R
-import com.pieterbommele.dunkbuzz.model.Match
-import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.ui.components.MatchItem
-import com.pieterbommele.dunkbuzz.ui.components.TeamItem
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamApiState
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamListState
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamOverviewState
-import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamOverviewViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
+/**
+ * Composable function to display a screen with matches.
+ *
+ * @param modifier Modifier for the Composable.
+ * @param matchesViewModel View model for managing matches data.
+ * @param isAddingVisible Flag to indicate whether adding is visible.
+ * @param makeInvisible Callback function to make a component invisible.
+ */
 @Composable
-fun MatchesScreen(modifier: Modifier = Modifier,
-                  matchesViewModel: MatchesViewModel = viewModel(factory = MatchesViewModel.Factory),
-                  isAddingVisisble: Boolean = false,
-                  makeInvisible: () -> Unit = {},
+fun MatchesScreen(
+    modifier: Modifier = Modifier,
+    matchesViewModel: MatchesViewModel = viewModel(factory = MatchesViewModel.Factory),
+    isAddingVisisble: Boolean = false,
+    makeInvisible: () -> Unit = {},
 ) {
     Log.i("vm inspection", "TaskOverview composition")
     val taskOverviewState by matchesViewModel.uiState.collectAsState()
@@ -66,7 +66,7 @@ fun MatchesScreen(modifier: Modifier = Modifier,
     // use the ApiState
     val taskApiState = matchesViewModel.matchApiState
 
-    //use the workerstate
+    // use the workerstate
     val workerState by matchesViewModel.wifiWorkerState.collectAsState()
     LaunchedEffect(selectedDateState.value) {
         selectedDateState.value?.let { selectedDate ->
@@ -75,15 +75,13 @@ fun MatchesScreen(modifier: Modifier = Modifier,
             if (indexToScrollTo != -1) {
                 coroutineScope.launch {
                     // Scroll to the index of the selected date
-                    datePickerLazyListState.animateScrollToItem(indexToScrollTo,-40)
+                    datePickerLazyListState.animateScrollToItem(indexToScrollTo, -40)
                 }
             }
         }
-
     }
 
-
-    Column (modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         val monthYearText = remember(selectedDateState.value) {
             "${selectedDateState.value?.month?.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${selectedDateState.value?.year}"
         }
@@ -130,11 +128,17 @@ fun MatchesScreen(modifier: Modifier = Modifier,
 }
 
 data class DateItem(
-    val id: Long,  // Unique identifier, can be the epoch day or something similar
+    val id: Long, // Unique identifier, can be the epoch day or something similar
     val dayOfWeek: String,
     val dayOfMonth: Int
 )
 
+/**
+ * Generates a list of DateItem objects representing days of a month.
+ *
+ * @param selectedDate The selected date from which to generate the items.
+ * @return A list of DateItem objects, each representing a day in the month.
+ */
 fun generateDateItems(selectedDate: LocalDate): List<DateItem> {
     val items = mutableListOf<DateItem>()
     val startOfMonth = selectedDate.withDayOfMonth(1)
@@ -144,7 +148,7 @@ fun generateDateItems(selectedDate: LocalDate): List<DateItem> {
     while (currentDate.isBefore(endOfMonth) || currentDate.isEqual(endOfMonth)) {
         items.add(
             DateItem(
-                id = currentDate.toEpochDay(),  // Example identifier
+                id = currentDate.toEpochDay(), // Example identifier
                 dayOfWeek = currentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                 dayOfMonth = currentDate.dayOfMonth
             )
@@ -155,6 +159,14 @@ fun generateDateItems(selectedDate: LocalDate): List<DateItem> {
     return items
 }
 
+/**
+ * Composable function for displaying a row of date items.
+ *
+ * @param dateItems List of date items to display.
+ * @param selectedDate The currently selected date, or null if none is selected.
+ * @param onDateSelected Callback function to handle date item selection.
+ * @param lazyListState The state of the LazyList for scroll positioning.
+ */
 @Composable
 fun DatePickerRow(
     dateItems: List<DateItem>,
@@ -164,7 +176,7 @@ fun DatePickerRow(
 ) {
     LazyRow(modifier = Modifier.fillMaxWidth(), state = lazyListState) {
         items(dateItems) { dateItem ->
-            val isSelected = selectedDate?.dayOfMonth == dateItem.dayOfMonth  // Determine if this item is selected
+            val isSelected = selectedDate?.dayOfMonth == dateItem.dayOfMonth // Determine if this item is selected
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 // circle box
                 Box(
@@ -177,7 +189,7 @@ fun DatePickerRow(
                             if (isSelected) MaterialTheme.colorScheme.onSecondary else Color.Transparent,
                             CircleShape
                         )
-                        .background(if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary)  // Light gray for selected, transparent for not selected
+                        .background(if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary) // Light gray for selected, transparent for not selected
                         .clickable { onDateSelected(dateItem) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -197,13 +209,13 @@ fun DatePickerRow(
     }
 }
 
-
 @Composable
 fun TeamListComponent(modifier: Modifier = Modifier, matchOverviewState: MatchOverviewState, matchListState: MatchListState) {
     val lazyListState = rememberLazyListState()
-    if(matchListState.matchList.isNotEmpty()) {
+    if (matchListState.matchList.isNotEmpty()) {
         LazyColumn(
-            state = lazyListState, modifier = modifier
+            state = lazyListState,
+            modifier = modifier
                 .padding(top = dimensionResource(R.dimen.smallSpacer))
         ) {
             items(matchListState.matchList.size) { index ->

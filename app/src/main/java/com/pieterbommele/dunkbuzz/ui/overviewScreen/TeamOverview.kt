@@ -1,7 +1,6 @@
 package com.pieterbommele.dunkbuzz.ui.overviewScreen
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -14,16 +13,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pieterbommele.dunkbuzz.R
-import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.ui.components.TeamItem
 import kotlinx.coroutines.launch
 
+/**
+ * Composable function for displaying the team overview screen.
+ *
+ * @param modifier The modifier for the TeamOverview composable.
+ * @param teamOverviewViewModel The view model for managing team overview data.
+ * @param isAddingVisisble Whether the add action is visible.
+ * @param makeInvisible The action to make the add action invisible.
+ */
 @Composable
 fun TeamOverview(
     modifier: Modifier = Modifier,
@@ -38,7 +41,7 @@ fun TeamOverview(
     // use the ApiState
     val taskApiState = teamOverviewViewModel.teamApiState
 
-    //use the workerstate
+    // use the workerstate
     val workerState by teamOverviewViewModel.wifiWorkerState.collectAsState()
     Column {
         Box(modifier = modifier) {
@@ -51,6 +54,13 @@ fun TeamOverview(
     }
 }
 
+/**
+ * Composable function for displaying the list of teams.
+ *
+ * @param modifier The modifier for the TeamListComponent composable.
+ * @param teamOverviewState The state of the team overview.
+ * @param teamListState The state of the team list.
+ */
 @Composable
 fun TeamListComponent(modifier: Modifier = Modifier, teamOverviewState: TeamOverviewState, teamListState: TeamListState) {
     val lazyListState = rememberLazyListState()
