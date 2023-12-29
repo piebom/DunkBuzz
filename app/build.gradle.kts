@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.10"
 }
 tasks.dokkaHtml {
-    outputDirectory.set(file("$rootDir/javadoc"))
+    outputDirectory.set(file("$rootDir/docs"))
 }
 ktlint {
     verbose.set(true)
