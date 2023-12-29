@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,14 +26,14 @@ fun DunkBuzzAppAppBar(
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.onPrimary,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
-                    modifier = Modifier.size(85.dp),
+                    modifier = Modifier.size(dimensionResource(R.dimen.logo)),
                     contentDescription = "Log"
                 )
             }

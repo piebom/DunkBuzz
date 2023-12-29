@@ -1,6 +1,8 @@
 package com.pieterbommele.dunkbuzz.ui
 
+import android.os.Build
 import androidx.activity.OnBackPressedDispatcher
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,11 +41,13 @@ import androidx.navigation.compose.rememberNavController
 import com.pieterbommele.dunkbuzz.R
 import com.pieterbommele.dunkbuzz.ui.components.DunkBuzzAppAppBar
 import com.pieterbommele.dunkbuzz.ui.components.DunkBuzzBottomAppBar
+import com.pieterbommele.dunkbuzz.ui.components.DunkBuzzNavigationRail
 import com.pieterbommele.dunkbuzz.ui.navigation.DunkBuzzOverviewScreen
 import com.pieterbommele.dunkbuzz.ui.navigation.navComponent
 import com.pieterbommele.dunkbuzz.ui.theme.DunkBuzzTheme
 import com.pieterbommele.dunkbuzz.ui.util.TaskNavigationType
 
+@RequiresApi(Build.VERSION_CODES.R)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DunkBuzzApp(
@@ -60,12 +64,9 @@ fun DunkBuzzApp(
     ).title
 
     var isAddNewVisible by remember { mutableStateOf(false) }
-
-    if(navigationType == TaskNavigationType.PERMANENT_NAVIGATION_DRAWER){
-    }
-    else if (navigationType == TaskNavigationType.BOTTOM_NAVIGATION){
+    if (navigationType == TaskNavigationType.BOTTOM_NAVIGATION){
         Scaffold(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.onPrimary,
             topBar = {
                 DunkBuzzAppAppBar(
                     currentScreenTitle = currentScreenTitle,
@@ -78,9 +79,32 @@ fun DunkBuzzApp(
             navComponent(navController, modifier = Modifier.padding(innerPadding))
         }
 
+    }else{
+        Row {
+            AnimatedVisibility(visible = navigationType == TaskNavigationType.NAVIGATION_RAIL) {
+                val navigationRailContentDescription = stringResource(R.string.navigation_rail)
+                DunkBuzzNavigationRail(
+                    selectedDestination = navController.currentDestination,
+                    onTabPressed = { node: String -> navController.navigate(node) },
+                )
+            }
+            Scaffold(
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                topBar = {
+                    DunkBuzzAppAppBar(
+                        currentScreenTitle = currentScreenTitle,
+                    )
+                },
+            ) { innerPadding ->
+
+                navComponent(navController, modifier = Modifier.padding(innerPadding))
+            }
+        }
+
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Preview(showBackground = true, widthDp = 500)
 @Composable
 fun DunkBuzzPreview() {

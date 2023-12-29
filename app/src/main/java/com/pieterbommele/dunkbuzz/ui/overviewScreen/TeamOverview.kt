@@ -15,9 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pieterbommele.dunkbuzz.R
 import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.ui.components.TeamItem
 import kotlinx.coroutines.launch
@@ -45,20 +47,6 @@ fun TeamOverview(
                 is TeamApiState.Error -> Text("Couldn't load...")
                 is TeamApiState.Success -> TeamListComponent(teamOverviewState = taskOverviewState, teamListState = taskListState)
             }
-
-//            if (isAddingVisisble) {
-//                CreateTask(
-//                    taskName = taskOverviewState.newTaskName,
-//                    taskDescription = taskOverviewState.newTaskDescription,
-//                    onTaskNameChanged = { taskOverviewViewModel.setNewTaskName(it) },
-//                    onTaskDescriptionChanged = { taskOverviewViewModel.setNewTaskDescription(it) },
-//                    onTaskSaved = {
-//                        taskOverviewViewModel.addTask()
-//                        makeInvisible()
-//                    },
-//                    onDismissRequest = { makeInvisible() },
-//                )
-//            }
         }
     }
 }
@@ -66,7 +54,7 @@ fun TeamOverview(
 @Composable
 fun TeamListComponent(modifier: Modifier = Modifier, teamOverviewState: TeamOverviewState, teamListState: TeamListState) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier.background(Color.White).padding(top = 16.dp)) {
+    LazyColumn(state = lazyListState, modifier = modifier.padding(top = dimensionResource(R.dimen.smallSpacer))) {
         items(teamListState.teamList.size) { index ->
             TeamItem(
                 teamName = teamListState.teamList[index].name,
@@ -84,10 +72,4 @@ fun TeamListComponent(modifier: Modifier = Modifier, teamOverviewState: TeamOver
             }
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 1000)
-@Composable
-fun TaskListComponentPreview() {
-    TeamListComponent(teamOverviewState = TeamOverviewState(), teamListState = TeamListState(listOf(Team(0,"previewtask", "previewdescription", "previewdescription", "previewdescription", "previewdescription", "previewdescription"))))
 }

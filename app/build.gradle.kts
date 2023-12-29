@@ -3,8 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0-Beta2"
     id("com.google.devtools.ksp")
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
-
+ktlint {
+    verbose.set(true)
+    android.set(false)
+}
 android {
     namespace = "com.pieterbommele.dunkbuzz"
     compileSdk = 34
@@ -96,5 +100,6 @@ dependencies {
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.6")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 
 }

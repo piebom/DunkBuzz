@@ -6,4 +6,5 @@
     <string name="Teams">Teams</string>
     <string name="Matches">Matches</string>
     <string name="Standings">Standings</string>
+    <string name="navigation_rail">Navigate between items here</string>
 </resources>

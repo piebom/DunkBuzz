@@ -2,6 +2,9 @@ package com.pieterbommele.dunkbuzz.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import android.view.WindowInsetsController
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -10,21 +13,31 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import com.pieterbommele.dunkbuzz.R
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DeepBlue,
+    secondary = White,
+    tertiary = LightGray,
+    surfaceVariant = DeepBlueDark,
+    onPrimary = Black,
+    onSecondary = White,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = DeepBlue,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    surfaceVariant = DeepBlueDark,
+    secondary = LightGray,
+    tertiary = LightGray,
+
+    onPrimary = White,
+    onSecondary = Black,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,11 +50,12 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun DunkBuzzTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -57,8 +71,9 @@ fun DunkBuzzTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = colorScheme.onPrimary.toArgb()
+            window.navigationBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 

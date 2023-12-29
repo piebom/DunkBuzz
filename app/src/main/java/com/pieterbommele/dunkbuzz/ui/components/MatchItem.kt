@@ -2,6 +2,7 @@ package com.pieterbommele.dunkbuzz.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -50,12 +52,13 @@ fun MatchItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(dimensionResource(R.dimen.padding_small))
     ) {
         Row(
             modifier = Modifier
                 .animateContentSize()
-                .padding(16.dp),
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(dimensionResource(R.dimen.smallSpacer)),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -63,20 +66,20 @@ fun MatchItem(
                 Image(
                     painter = painterResource(id = imageResIdHome),
                     contentDescription = "$home_team_name logo",
-                    modifier = Modifier.size(75.dp)
+                    modifier = Modifier.size(dimensionResource(R.dimen.nbateam))
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.smallSpacer)))
                 Text(
                     text = home_team_name,
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.smallSpacer)))
             Row(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Center,
@@ -88,27 +91,27 @@ fun MatchItem(
                         fontSize = 40.sp,
                         fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
-                Spacer(modifier = Modifier.width(8.dp)) // This spacer will likely be vertical
+                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_small))) // This spacer will likely be vertical
                 Text(
                     text = "Q$quarter",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
-                Spacer(modifier = Modifier.width(8.dp)) // This spacer will likely be vertical
+                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_small))) // This spacer will likely be vertical
                 Text(
                     text = "$visitor_team_score",
                     style = TextStyle(
                         fontSize = 40.sp,
                         fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
             }
@@ -116,16 +119,16 @@ fun MatchItem(
                 Image(
                     painter = painterResource(id = imageResIdVisitor),
                     contentDescription = "$visitor_team_name logo",
-                    modifier = Modifier.size(75.dp)
+                    modifier = Modifier.size(dimensionResource(R.dimen.nbateam))
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.smallSpacer)))
                 Text(
                     text = visitor_team_name,
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
             }

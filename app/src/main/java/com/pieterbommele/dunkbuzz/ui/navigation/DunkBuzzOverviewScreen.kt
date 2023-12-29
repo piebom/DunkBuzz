@@ -9,6 +9,6 @@ import androidx.compose.ui.res.vectorResource
 import com.pieterbommele.dunkbuzz.R
 
 enum class DunkBuzzOverviewScreen(@StringRes val title: Int, val icon: Int) {
-    Teams(title = R.string.Teams, icon = R.drawable.user),
-    Matches(title = R.string.Matches, R.drawable.user),
+    Teams(title = R.string.Teams, icon = R.drawable.team),
+    Matches(title = R.string.Matches, icon = R.drawable.matches),
 }

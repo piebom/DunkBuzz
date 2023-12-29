@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,11 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pieterbommele.dunkbuzz.R
 import com.pieterbommele.dunkbuzz.model.Match
 import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.ui.components.MatchItem
@@ -88,7 +91,7 @@ fun MatchesScreen(modifier: Modifier = Modifier,
             text = monthYearText,
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = dimensionResource(R.dimen.smallSpacer)),
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
@@ -166,27 +169,27 @@ fun DatePickerRow(
                 // circle box
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .size(40.dp) // Set a fixed size for the circle
+                        .padding(dimensionResource(R.dimen.padding_small))
+                        .size(dimensionResource(R.dimen.largePadding)) // Set a fixed size for the circle
                         .clip(CircleShape) // Clip the box to a circle
                         .border(
-                            2.dp,
-                            if (isSelected) Color(0xFF0B153D) else Color.Transparent,
+                            dimensionResource(R.dimen.border),
+                            if (isSelected) MaterialTheme.colorScheme.onSecondary else Color.Transparent,
                             CircleShape
                         )
-                        .background(if (isSelected) Color(0xFFFFFFFF) else Color(0xFFE7E7E7))  // Light gray for selected, transparent for not selected
+                        .background(if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary)  // Light gray for selected, transparent for not selected
                         .clickable { onDateSelected(dateItem) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = dateItem.dayOfMonth.toString(),
-                        color = if (isSelected) Color.Black else Color.Gray, // Black text for selected, gray for not selected
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray, // Black text for selected, gray for not selected
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal // Bold for selected, normal for not selected
                     )
                 }
                 Text(
                     text = dateItem.dayOfWeek,
-                    color = if (isSelected) Color.Black else Color.Gray, // Black text for selected, gray for not selected
+                    color = if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.tertiary, // Black text for selected, gray for not selected
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal // Bold for selected, normal for not selected
                 )
             }
@@ -201,8 +204,7 @@ fun TeamListComponent(modifier: Modifier = Modifier, matchOverviewState: MatchOv
     if(matchListState.matchList.isNotEmpty()) {
         LazyColumn(
             state = lazyListState, modifier = modifier
-                .background(Color.White)
-                .padding(top = 16.dp)
+                .padding(top = dimensionResource(R.dimen.smallSpacer))
         ) {
             items(matchListState.matchList.size) { index ->
                 MatchItem(
@@ -227,24 +229,3 @@ fun TeamListComponent(modifier: Modifier = Modifier, matchOverviewState: MatchOv
         }
     }
 }
-
-//@Preview(showBackground = true, widthDp = 1000)
-//@Composable
-//fun TaskListComponentPreview() {
-//    TeamListComponent(matchOverviewState = MatchOverviewState(), teamListState = TeamListState(listOf(
-//        Match(
-//            0,
-//            "previewtask",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//            "previewdescription",
-//        )
-//    ))
-//    )
-//}

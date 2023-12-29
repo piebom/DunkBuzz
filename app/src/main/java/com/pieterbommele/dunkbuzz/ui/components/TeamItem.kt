@@ -1,7 +1,10 @@
 package com.pieterbommele.dunkbuzz.ui.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -40,48 +44,38 @@ fun TeamItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(dimensionResource(R.dimen.padding_small)),
     ) {
         Row(
             modifier = Modifier
                 .animateContentSize()
-                .padding(16.dp),
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(dimensionResource(R.dimen.smallSpacer)),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Assuming the logo is square, adjust the size accordingly
             Image(
                 painter = painterResource(id = imageResId),
-                modifier = Modifier.size(75.dp),
+                modifier = Modifier.size(dimensionResource(R.dimen.nbateam)),
                 contentDescription = "$teamName logo"
             )
-            Spacer(modifier = Modifier.width(16.dp)) // Space between the logo and the text
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.smallSpacer))) // Space between the logo and the text
             Column {
                 Text(
                     text = teamName,
                     style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
                 Text(
                     text = "#$teamAbbreviation",
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.bebasnueue, FontWeight.Normal))
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun TeamItemPreview() {
-    DunkBuzzTheme {
-        TeamItem(
-            id = 1, // This should correspond to the drawable resource name
-            teamName = "Los Angeles Lakers",
-            teamAbbreviation = "LAL"
-        )
     }
 }

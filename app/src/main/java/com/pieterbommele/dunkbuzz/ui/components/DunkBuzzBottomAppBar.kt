@@ -1,4 +1,6 @@
 package com.pieterbommele.dunkbuzz.ui.components
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -28,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -47,19 +50,20 @@ data class BottomNavigationItem(
     val badgeCount: Int? = null
 )
 
+@RequiresApi(Build.VERSION_CODES.R)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit) {
         DunkBuzzTheme {
             val items = listOf(
                 BottomNavigationItem(
-                    title = "Teams",
+                    title = stringResource(R.string.Teams),
                     selectedIcon = ImageVector.vectorResource(R.drawable.team),
                     unselectedIcon = ImageVector.vectorResource(R.drawable.team),
                     hasNews = false,
                 ),
                 BottomNavigationItem(
-                    title = "Matches",
+                    title = stringResource(R.string.Matches),
                     selectedIcon = ImageVector.vectorResource(R.drawable.matches),
                     unselectedIcon = ImageVector.vectorResource(R.drawable.matches),
                     hasNews = false,
@@ -72,7 +76,7 @@ fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit) {
                             items.forEachIndexed { index, item ->
                                 NavigationBarItem(
                                     colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = DeepBlueDark,
+                                        indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
                                     ),
                                     selected = selectedItemIndex == index,
                                     onClick = {
@@ -85,7 +89,7 @@ fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit) {
                                         }
                                     },
                                     label = {
-                                        Text(color = Primary, text = item.title, fontFamily = FontFamily(Font(R.font.bebasnueue, weight = FontWeight.Normal)))
+                                        Text(color = MaterialTheme.colorScheme.secondary, text = item.title, fontFamily = FontFamily(Font(R.font.bebasnueue, weight = FontWeight.Normal)))
                                     },
                                     icon = {
 
@@ -102,7 +106,7 @@ fun DunkBuzzBottomAppBar(goTeams: () -> Unit, goMatches: () -> Unit) {
                                         ) {
                                             Icon(
 
-                                                tint = Primary,
+                                                tint = MaterialTheme.colorScheme.secondary,
                                                 imageVector = if (index == selectedItemIndex) {
                                                     item.selectedIcon
                                                 } else item.unselectedIcon,
