@@ -57,6 +57,6 @@ interface TeamDao {
      *
      * @return A Flow emitting a list of all [DbTeam] entities in the database, ordered by name.
      */
-    @Query("SELECT * from teams ORDER BY name ASC")
+    @Query("SELECT * from teams ORDER BY id asc")
     fun getAllItems(): Flow<List<DbTeam>>
 }

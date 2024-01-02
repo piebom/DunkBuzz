@@ -80,7 +80,7 @@ class MatchesViewModel(private val matchesRepository: MatchesRepository) : ViewM
     }
 
     // this
-    private fun getRepoMatches(date: String) {
+    private fun getRepoMatches(date: String = "2023-12-23T00:00:00.000Z") {
         try {
 
             viewModelScope.launch {
