@@ -1,6 +1,5 @@
 package com.pieterbommele
 
-import androidx.compose.runtime.collectAsState
 import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamApiState
 import com.pieterbommele.dunkbuzz.ui.overviewScreen.TeamOverviewViewModel
@@ -41,30 +40,29 @@ class TeamOverviewViewModelTest {
         }
     }
 
-        @Test
-        fun getTeamsTest() = runTest{
-            Assert.assertEquals(FakeDataSource.teams, getAllTeams())
-
-        }
-
-        suspend fun getAllTeams() : List<Team> {
-            val thisTeams: List<Team>
-            when (apiState) {
-                is TeamApiState.Success -> {
-                    thisTeams = viewModel.uiListState.first().teamList
-                }
-
-                else -> {
-                    throw AssertionError("ViewModel not in success state")
-                }
-            }
-            return thisTeams
-        }
+    @Test
+    fun getTeamsTest() = runTest {
+        Assert.assertEquals(FakeDataSource.teams, getAllTeams())
     }
+
+    suspend fun getAllTeams(): List<Team> {
+        val thisTeams: List<Team>
+        when (apiState) {
+            is TeamApiState.Success -> {
+                thisTeams = viewModel.uiListState.first().teamList
+            }
+
+            else -> {
+                throw AssertionError("ViewModel not in success state")
+            }
+        }
+        return thisTeams
+    }
+}
 
 class TestDispatcherRule(
     val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-) : TestWatcher(){
+) : TestWatcher() {
     override fun starting(description: org.junit.runner.Description?) {
         Dispatchers.setMain(testDispatcher)
     }

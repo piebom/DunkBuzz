@@ -34,7 +34,7 @@ class FakeApiTeamsRepository : TeamsRepository {
     }
 
     override suspend fun refresh() {
-        return;
+        return
     }
 
     override var wifiWorkInfo: Flow<WorkInfo>

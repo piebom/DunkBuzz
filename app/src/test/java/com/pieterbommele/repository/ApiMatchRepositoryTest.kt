@@ -1,13 +1,10 @@
 package com.pieterbommele.repository
 
 import com.pieterbommele.dunkbuzz.model.Match
-import com.pieterbommele.dunkbuzz.model.Team
 import com.pieterbommele.dunkbuzz.network.Match.asDomainObjects
 import com.pieterbommele.dunkbuzz.network.Team.asDomainObjects
 import com.pieterbommele.fake.FakeApiMatchesRepository
 import com.pieterbommele.fake.FakeApiMatchesService
-import com.pieterbommele.fake.FakeApiTeamsRepository
-import com.pieterbommele.fake.FakeApiTeamsService
 import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Test

@@ -32,7 +32,7 @@ class FakeApiMatchesRepository : MatchesRepository {
     }
 
     override suspend fun refresh(date: String) {
-        return;
+        return
     }
 
     override var wifiWorkInfo: Flow<WorkInfo>

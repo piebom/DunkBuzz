@@ -1,6 +1,5 @@
 package com.pieterbommele.dunkbuzz.ui.overviewScreen
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -44,7 +43,7 @@ class TeamOverviewViewModel(private val teamsRepository: TeamsRepository) : View
 
         // initializes the uiListState
         getRepoTeams()
-           }
+    }
 
     // this
     private fun getRepoTeams() {

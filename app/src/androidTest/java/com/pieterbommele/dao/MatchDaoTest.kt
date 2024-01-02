@@ -21,7 +21,7 @@ import java.io.IOException
 
 class MatchDaoTest {
     private lateinit var matchDao: MatchDao
-    private lateinit var db : DunkBuzzDb
+    private lateinit var db: DunkBuzzDb
     private var date = "2023-12-23T00:00:00.000Z"
 
     @Before
@@ -41,7 +41,7 @@ class MatchDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoInsertMatchTest() = runBlocking{
+    fun DaoInsertMatchTest() = runBlocking {
         matchDao.insert(FakeDataSource.matches[0].asDbMatch())
         val match = matchDao.getAllItems(date).map {
             it.asDomainMatches()
@@ -51,7 +51,7 @@ class MatchDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoInsertMatchesTest() = runBlocking{
+    fun DaoInsertMatchesTest() = runBlocking {
         FakeDataSource.matches.forEach {
             matchDao.insert(it.asDbMatch())
         }
@@ -63,7 +63,7 @@ class MatchDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoDeleteMatchTest() = runBlocking{
+    fun DaoDeleteMatchTest() = runBlocking {
         matchDao.insert(FakeDataSource.matches[0].asDbMatch())
         matchDao.delete(FakeDataSource.matches[0].asDbMatch())
         val matches = matchDao.getAllItems(date).map {
@@ -74,11 +74,11 @@ class MatchDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoGetByIdTest() = runBlocking{
+    fun DaoGetByIdTest() = runBlocking {
         FakeDataSource.matches.forEach {
             matchDao.insert(it.asDbMatch())
         }
-        val match = matchDao.getItem(1).map{
+        val match = matchDao.getItem(1).map {
             it.asDomainMatch()
         }.first()
         assertEquals(FakeDataSource.matches[0], match)

@@ -5,9 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.pieterbommele.FakeDataSource
 import com.pieterbommele.dunkbuzz.data.database.DunkBuzzDb
-import com.pieterbommele.dunkbuzz.data.database.Match.MatchDao
-import com.pieterbommele.dunkbuzz.data.database.Match.asDbMatch
-import com.pieterbommele.dunkbuzz.data.database.Match.asDomainMatches
 import com.pieterbommele.dunkbuzz.data.database.Team.TeamDao
 import com.pieterbommele.dunkbuzz.data.database.Team.asDbTeam
 import com.pieterbommele.dunkbuzz.data.database.Team.asDomainTeams
@@ -23,7 +20,7 @@ import java.io.IOException
 
 class TeamDaoTest {
     private lateinit var teamDao: TeamDao
-    private lateinit var db : DunkBuzzDb
+    private lateinit var db: DunkBuzzDb
 
     @Before
     fun createDb() {
@@ -42,7 +39,7 @@ class TeamDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoInsertTeamTest() = runBlocking{
+    fun DaoInsertTeamTest() = runBlocking {
         teamDao.insert(FakeDataSource.teams[0].asDbTeam())
         val team = teamDao.getAllItems().first()[0].asDomainTeams()
         assertEquals(FakeDataSource.teams[0], team)
@@ -50,7 +47,7 @@ class TeamDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoInsertTeamsTest() = runBlocking{
+    fun DaoInsertTeamsTest() = runBlocking {
         FakeDataSource.teams.forEach {
             teamDao.insert(it.asDbTeam())
         }
@@ -62,7 +59,7 @@ class TeamDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoDeleteTeamTest() = runBlocking{
+    fun DaoDeleteTeamTest() = runBlocking {
         teamDao.insert(FakeDataSource.teams[0].asDbTeam())
         teamDao.delete(FakeDataSource.teams[0].asDbTeam())
         val teams = teamDao.getAllItems().first().asDomainTeams()
@@ -71,10 +68,9 @@ class TeamDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun DaoGetTeamTest() = runBlocking{
+    fun DaoGetTeamTest() = runBlocking {
         teamDao.insert(FakeDataSource.teams[0].asDbTeam())
         val team = teamDao.getItem("Hawks").first().asDomainTeams()
         assertEquals(FakeDataSource.teams[0], team)
     }
-
 }
